@@ -22,4 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),       # Home page with form
     path('list/', views.index, name='index'),
+    path('edit/<int:note_id>/', views.edit, name='edit'),
+    path('delete/<int:note_id>/', views.delete, name='delete'),
 ]

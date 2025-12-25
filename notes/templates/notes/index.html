@@ -7,6 +7,22 @@
 
 <hr>
 
+<!-- Search Form -->
+<div class="mb-4">
+    <form method="POST" class="d-flex gap-2">
+        {% csrf_token %}
+        <input type="text" name="search" class="form-control" placeholder="Search notes by title or content..." value="{{ search_query }}">
+        <button type="submit" class="btn btn-info">Search</button>
+        {% if search_query %}
+            <a href="{% url 'index' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+{% if search_query %}
+    <p class="text-muted">Search results for: <strong>"{{ search_query }}"</strong></p>
+{% endif %}
+
 <div class="row">
     {% for note in notes %}
         <div class="col-12 mb-3">
@@ -20,12 +36,16 @@
                     </div>
                     <p class="text-muted small mb-2">Created on {{ note.created_at|date:"M d, Y" }}</p>
                     <p class="card-text" style="white-space: pre-wrap;">{{ note.content }}</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="{% url 'edit' note.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'delete' note.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
                 </div>
             </div>
         </div>
     {% empty %}
         <div class="col-12 text-center py-5">
-            <p class="text-muted">No notes found. Your notebook is empty!</p>
+            <p class="text-muted">{% if search_query %}No notes match your search.{% else %}No notes found. Your notebook is empty!{% endif %}</p>
             <a href="{% url 'home' %}" class="btn btn-outline-primary">Create Your First Note</a>
         </div>
     {% endfor %}
